@@ -138,3 +138,19 @@ export function subscribeToastShown(cb: (data: ShowToastEvent) => void) {
   window.addEventListener(toastShownName, handler);
   return () => window.removeEventListener(toastShownName, handler);
 }
+
+// This part of code is present to record the origin page when navigating to the patient chart.
+export function handleRouteChange(evt) {
+  const prevUrl = evt?.detail?.oldUrl;
+  const newUrl = evt?.detail?.newUrl;
+
+  const patientChartURLRegex = /\/patient\/([a-zA-Z0-9\-]+)\/chart\/?/;
+
+  if (
+    !patientChartURLRegex.test(prevUrl) &&
+    patientChartURLRegex.test(newUrl)
+  ) {
+    const originPage = prevUrl.split(window.spaBase)?.[1];
+    return originPage;
+  }
+}
